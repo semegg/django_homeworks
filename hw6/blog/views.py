@@ -4,16 +4,16 @@ from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.text import slugify
 
-from .forms import CommentForm, PostForm
 from .models import (
     Post,
     PostLike,
     PostDislike,
     Comment,
     CommentLike,
-    CommentDislike, Follow
+    CommentDislike
 )
 from .utils import paginate_objects
+from .forms import CommentForm, PostForm
 
 
 def post_list(request):
@@ -23,7 +23,6 @@ def post_list(request):
 
 
 def post_detail(request, year, month, day, post_slug):
-    user = request.user
     post = get_object_or_404(Post,
                              slug=post_slug,
                              status='published',
@@ -31,12 +30,7 @@ def post_detail(request, year, month, day, post_slug):
                              publish__month=month,
                              publish__day=day)
     form = CommentForm()
-    follow = Follow.objects.filter(follower=user, followed=post.author)  # ---------------
-    if follow.exists():  # немного подправлено тут
-        follow = "Unfollow"
-    else:
-        follow = "Follow"
-    return render(request, 'blog/post/detail.html', {'post': post, 'form': form, "follow": follow})
+    return render(request, 'blog/post/detail.html', {'post': post, 'form': form})
 
 
 @login_required
@@ -182,7 +176,7 @@ def dislike_comment(request, comment_id):
 
 @login_required
 @user_passes_test(lambda user: user.is_superuser)
-def delete_comment(comment_id):
+def delete_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     comment.delete()
     return HttpResponseRedirect(f'{comment.post.get_absolute_url()}#comments')
@@ -196,15 +190,3 @@ def toggle_comment_active(request, comment_id):
     comment.save()
     return HttpResponseRedirect(f'{comment.post.get_absolute_url()}#comments')
 
-
-@login_required()
-def follow_or_unfollow(request, post_id):  # Интересно узнать чем опасно совмещать 2 эти действия в 1
-    post = get_object_or_404(Post, id=post_id)
-    user = request.user
-    follow = Follow.objects.filter(follower=user, followed=post.author)
-    if follow.exists():
-        follower = post.author.followers.get(follower=user)
-        follower.delete()
-    else:
-        Follow.objects.create(follower=user, followed=post.author)
-    return redirect(post.get_absolute_url())
