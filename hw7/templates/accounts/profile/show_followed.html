@@ -1,0 +1,21 @@
+{% extends 'base/_base.html' %}
+
+
+{% block content %}
+{% include './base.html' %}
+{% for follow in followed %}
+<section class="">
+<div class="container py-2">
+    <div class="col col-lg-9 col-xl-7"></div>
+    <div class="list-group border border-4  align-items-center">
+        <a href="{% url 'accounts:profile_detail' username=follow.followed.username %}"
+           class="list-group-item list-group-item-action">
+            <img src=follow.followed.avatar" class="me-1"><strong>{{ follow.followed.username }}</strong>
+        </a> {% if request.user.is_superuser %}
+        <p>{{ follow.created|date:"M d, Y" }}</p>
+        {% endif %}
+    </div>
+</div>
+    {% endfor %}
+</section>
+{% endblock %}

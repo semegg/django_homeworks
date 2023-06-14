@@ -1,0 +1,73 @@
+{% load profile_filters %}
+
+{% block title %}
+Profile by {{ profile.user.username }}
+{% endblock title %}
+
+
+{% block content %}
+<section class="h-100 gradient-custom-2">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-lg-9 col-xl-7">
+                <div class="card">
+                    <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height:200px;">
+                        <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
+                            <img src="{{ profile.avatar }}"
+                                 alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
+                                 style="width: 150px; z-index: 1">
+                            {% if request.user == profile.user %}
+                            <button type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark"
+                                    style="z-index: 1;">
+                                <a href="{% url 'accounts:profile_update' username=profile.user.username %}">
+                                    Edit profile
+                                </a>
+                            </button>
+
+                            {% endif %}
+                        </div>
+                        <div class="ms-3" style="margin-top: 100px;">
+                            <div class="mb-2">
+                                {% if request.user != profile.user %}
+                                {% if request.user|is_following:profile.user %}
+                                <a href="{% url 'accounts:unfollow_user' username=profile.user.username %}">
+                                    <button class="btn btn-danger">Unfollow</button>
+                                </a>
+                                {% else %}
+                                <a href="{% url 'accounts:follow_user' username=profile.user.username %}">
+                                    <button class="btn btn-info">Follow</button>
+                                </a>
+                                {% endif %}
+                                {% endif %}
+                            </div>
+                            <a href="{{ profile.get_absolute_url }}" class="text-decoration-none text-white">
+                            <h5>{{ profile.user.first_name }} {{ profile.user.last_name }},
+                                {{ profile.date_of_birth|calculate_age }} years old
+                            </h5></a>
+                            <p>{{ profile.info }}</p>
+                        </div>
+                    </div>
+                    <div class="p-4 text-black" style="background-color: #f8f9fa;">
+                        <div class="d-flex justify-content-end text-center py-1">
+                            <div>
+                                <p class="mb-1 h5">{{ profile.user.posts.count }}</p>
+                                <p class="small text-muted mb-0">Posts</p>
+                            </div>
+                            <div class="px-3  ">
+                                <a href="{% url 'accounts:show_followers' username=profile.user.username %}" class="text-decoration-none text-black">
+                                <p class="mb-1 h5 ">{{ profile.user.followers.count }}</p>
+                                    <p class="small text-muted mb-0 text-decoration-none text-reset">Followers</p></a>
+                            </div>
+                            <div>
+                                 <a href="{% url 'accounts:show_followed' username=profile.user.username %}" class="text-decoration-none text-black">
+                                <p class="mb-1 h5">{{ profile.user.following.count }}</p>
+                                     <p class="small text-muted mb-0">Following</p></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
