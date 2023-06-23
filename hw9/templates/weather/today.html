@@ -1,0 +1,112 @@
+{% extends 'base/_base.html' %}
+
+{% block title %}
+Current weather
+{% endblock title %}
+
+
+{% block content %}
+
+{% if weather %}
+<section class="vh-100" style="background-color: #4B515D;">
+    <div class="container py-5 h-100">
+
+        <div class="row d-flex justify-content-center align-items-center h-150">
+            <div class="col-md-8 col-lg-6 col-xl-4">
+
+                <div class="card" style="color: #4B515D; border-radius: 35px;">
+                    <div class="card-body p-5">
+
+                        <div class="d-flex">
+                            <h6 class="flex-grow-1">{{ weather.city }}</h6>
+                            <h6>{{ weather.time_info.current }}</h6>
+                        </div>
+
+                        <div class="d-flex flex-column text-center mt-5 mb-4">
+                            <h6 class="display-4 mb-0 font-weight-bold" style="color: #1C2331;"> {{ weather.temperature }}°C </h6>
+                            <span class="small" style="color: #868B94">{{ weather.condition }}</span>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1" style="font-size: 1rem;">
+                                <div><i class="fas fa-wind fa-fw" style="color: #868B94;"></i> <span class="ms-1">
+                  {{ weather.wind_speed }} km/h
+                  </span></div>
+                                <div><i class="fas fa-tint fa-fw" style="color: #868B94;"></i> <span class="ms-1">
+                  {{ weather.humidity }}% </span>
+                                </div>
+                                <div><i class="fas fa-sun fa-fw" style="color: #868B94;"></i> <span class="ms-1">
+                {{ weather.time_info.sunrise }}</span>
+                                </div>
+                                <div><i class="fas fa-moon fa-fw" style="color: #868B94;"></i> <span class="ms-1">
+                {{ weather.time_info.sunset }}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <img src="https://openweathermap.org/img/wn/{{ weather.icon }}@2x.png"
+                                     width="100px">
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!--            -->
+
+                    <div class="card mb-0" style="color: #4B515D; border-radius: 35px;">
+
+                        <div class="card-body p-4">
+
+                            <div id="demo2" class="carousel slide" data-ride="carousel">
+
+
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active">
+
+                                        <div class="d-flex justify-content-around border-0 text-center mb-4 pb-4 pt-3">
+                                            {% for forecast in forecasts%}
+                                            <div class="flex-column">
+
+                                                <p class="small"><strong>{{ forecast.temperature }}°C</strong></p>
+                                                <img src="https://openweathermap.org/img/wn/{{ forecast.icon }}@2x.png"
+                                                     width="25px">
+                                                <p class="mb-0"><strong>{{ forecast.time }}</strong></p>
+
+                                                {% endfor %}
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!--    -->
+        </div>
+
+
+    </div>
+
+</section>
+{% else %}
+<div class="col-md-4 mb-3">
+    <div class="mt-5">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="mb-4">
+                <strong>
+                    {{ form.city.label_tag }}
+                </strong>
+            </div>
+            {{ form.city }}
+            <button type="submit" class="btn btn-info mt-3">Submit</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}

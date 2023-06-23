@@ -1,0 +1,116 @@
+{% extends 'base/_base.html' %}
+{% load blog_filters %}
+{% load static %}
+
+
+{% block title %}
+  {{ post.title }}
+{% endblock title %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    {% if request.user == post.author %}
+    <div class="col-md-3">
+      <a href="{% url 'blog:update_post' post.id %}" class="text-decoration-none">
+        <button class="btn btn-info">Update</button>
+      </a>
+      <a class="text-decoration-none">
+        <button class="btn btn-danger"
+                id="deleteBtn"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+                data-url="{% url 'blog:delete_post' post.id %}">
+          Delete
+        </button>
+      </a>
+    </div>
+    {% include 'blog/modals/delete_modal.html' %}
+    {% endif %}
+    <div class="col-lg-10">
+        <div class="col-md-8 mx-auto mt-5">
+            <h1 class="mb-4">{{ post.title }}</h1>
+        </div>
+        <div class="text-center">
+          <img src="{{ post.image_url }}" alt="" class="img-fluid mx-auto d-block mb-3">
+        </div>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <p class="card-text">{{ post.body|linebreaks }}</p>
+        </div>
+        <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+          <p class="mb-0">
+              <i class="fas fa-user mx-1"></i>
+              @{{ post.author }}
+            - {{ post.publish|date:"l d M Y" }}
+          </p>
+          <div class="d-flex align-items-center ml-auto" id="postFooter">
+              <div class="d-flex flex-row align-items-center text-primary">
+                {% if post|is_liked_by:request.user %}
+                <p class="small mb-0">Unlike</p>
+                <a href="{% url 'blog:post_like' post.id %}">
+                  <i class="fa-solid fa-thumbs-up mx-2 fa-xs"></i>
+                </a>
+                {% else %}
+                <p class="small mb-0">Like</p>
+                <a href="{% url 'blog:post_like' post.id %}">
+                  <i class="fa-regular fa-thumbs-up mx-2 fa-xs"></i>
+                </a>
+                {% endif %}
+                <p class="small mb-0 me-3">{{ post.likes.count }}</p>
+              </div>
+
+              <div class="d-flex flex-row align-items-center text-primary">
+                {% if post|is_disliked_by:request.user %}
+                <p class="small mb-0">Undislike</p>
+                <a href="{% url 'blog:post_dislike' post.id %}">
+                  <i class="fa-solid fa-thumbs-down mx-2 fa-xs"></i>
+                </a>
+                {% else %}
+                <p class="small mb-0">Dislike</p>
+                <a href="{% url 'blog:post_dislike' post.id %}">
+                  <i class="fa-regular fa-thumbs-down mx-2 fa-xs"></i>
+                </a>
+                {% endif %}
+
+                <p class="small mb-0">{{ post.dislikes.count }}</p>
+              </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+<div class="row d-flex justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <h1>Comments</h1>
+    <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+      <div class="card-body p-4">
+        <div class="form-outline mb-4" id="comments">
+
+          <form method="post" action="{% url 'blog:add_comment' post.id %}">
+              {% csrf_token %}
+              {{ form.body.label_tag }}
+              {{ form.body }}
+            <button type="submit" class="btn btn-info mt-2">Add</button>
+          </form>
+
+        </div>
+        <hr>
+        {% if post.comments.count %}
+            {% for comment in post.comments.all %}
+              {% include 'blog/comment/detail.html' %}
+            {% endfor %}
+        {% else %}
+        <p>No comments yet</p>
+        {% endif %}
+        <hr>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<script src="{% static 'js/scroll_to_like.js' %}"></script>
+<script src="{% static 'js/confirm_delete.js' %}"></script>
+{% endblock content %}
+
