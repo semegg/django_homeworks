@@ -1,0 +1,29 @@
+{% extends 'base/_base.html' %}
+
+
+{% block title %}
+  Login page
+{% endblock title %}
+
+
+{% block content %}
+<div class="col-md-4">
+  <h2>Login</h2>
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ form.email.label_tag }} {{ form.email }}
+    {{ form.password.label_tag }} {{ form.password }}
+    <div class="form-check mt-2">
+      {{ form.remember_me }} {{ form.remember_me.label_tag }}
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Login</button>
+  </form>
+</div>
+
+<div class="mt-4">
+  <a href="{% url 'accounts:reactivate_sent' %}" class="link-secondary">Reactivate token</a>
+</div>
+<div>
+  <a href="{% url 'accounts:password_reset_sent' %}" class="link-secondary">Reset password token</a>
+</div>
+{% endblock content %}

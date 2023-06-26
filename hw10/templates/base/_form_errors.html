@@ -1,0 +1,19 @@
+{% if form_errors %}
+<div class="col-md-6">
+  <div class="alert alert-danger" id="alert">
+    <button type="button" class="close" data-dissmiss="alert" aria-label="Close"
+    style="position: absolute; top: 0; right: 0; font-size: smaller; background-color: inherit; border: none;">
+      <span aria-hidden="true" id="close_alert" onclick="closeAlert()">
+        <strong style="font-size: 1.5rem">&times;</strong>
+      </span>
+    </button>
+    <ul>
+      {% for field, errors in form_errors.items %}
+        {% for error in errors %}
+          <li><strong>{{ field }}: {{ error }}</strong></li>
+        {% endfor %}
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endif %}

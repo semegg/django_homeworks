@@ -1,0 +1,47 @@
+<div class="flex-shrink-0 p-3 bg-white float-end mt-5" style="width: 280px;">
+  <a href="/" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
+    <svg class="bi me-2" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+    <span class="fs-5 fw-semibold">Blog view options</span>
+  </a>
+  <ul class="list-unstyled ps-0">
+    <li class="mb-1">
+      <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+        Show by period
+      </button>
+      <div class="collapse show" id="home-collapse">
+        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+          <li><a href="{% url 'blog:post_list' %}{% if author %}?author={{ author }}{% endif %}">Show all posts</a></li>
+          <li>
+            <a href="{% url 'blog:post_list' %}?period=day{% if author %}&author={{ author }}{% endif %}">
+              Show today's posts
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'blog:post_list' %}?period=week{% if author %}&author={{ author }}{% endif %}">
+              Show last 7 days posts
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'blog:post_list' %}?period=month{% if author %}&author={{ author }}{% endif %}">
+              Show last 30 days posts
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
+    <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+          Personal blog
+        </button>
+        <div class="collapse" id="dashboard-collapse" style="">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li class="mt-3">
+              <a href="{% url 'blog:add_post' %}" class="link-dark rounded">
+                Add blog
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+  </ul>
+</div>
