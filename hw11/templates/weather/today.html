@@ -1,0 +1,52 @@
+{% extends 'base/_base.html' %}
+
+{% block title %}
+  Current weather
+{% endblock title %}
+
+
+{% block content %}
+
+{% if weather %}
+
+  {% include 'weather/_today_widget.html' %}
+  <div class="d-flex justify-content-between mt-5">
+    <div>
+      <a href="{% url 'weather:today' %}">
+        <button class="btn btn-info btn-lg">Back</button>
+      </a>
+    </div>
+
+    {% if request.user.is_authenticated %}
+    <div>
+      <form action="{% url 'weather:user_city_create' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="city" value="{{ weather.city }}">
+        <input type="hidden" name="country_code" value="{{ weather.country_code }}">
+        <input type="hidden" name="lon" value="{{ weather.coordinates.lon }}">
+        <input type="hidden" name="lat" value="{{ weather.coordinates.lat }}">
+        <button class="btn btn-danger btn-lg">Add</button>
+      </form>
+
+    </div>
+    {% endif %}
+  </div>
+
+
+{% else %}
+  <div class="col-md-4 mb-3">
+    <div class="mt-5">
+      <form action="" method="post">
+        {% csrf_token %}
+        <div class="mb-4">
+          <strong>
+            {{ form.city.label_tag }}
+          </strong>
+        </div>
+        {{ form.city }}
+        <button type="submit" class="btn btn-info mt-3">Submit</button>
+      </form>
+    </div>
+  </div>
+{% endif %}
+{% endblock content %}

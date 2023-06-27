@@ -1,0 +1,29 @@
+{% extends 'base/_base.html' %}
+{% load static %}
+
+{% block title %}
+{{ city_info.name }}
+{% endblock title %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center">
+    <h1 class="flex-grow-1"> Information about {{ city_info.name }}</h1>
+                    <img src="{{ city_info.country.flag }}"
+                     alt="{{ city_info.city.country }} flag"
+                     width="45">
+</div>
+{% autoescape off %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{ city_info.image }}" alt="{{ city_info.name }}" class="img-fluid">
+        </div>
+        <div class="col-md-6">
+            <h2>Description</h2>
+            <p class="description-text">{{ city_info.description }}</p>
+
+        </div>
+    </div>
+</div>
+{% endautoescape %}
+{% endblock content %}

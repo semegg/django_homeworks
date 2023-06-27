@@ -1,0 +1,81 @@
+{% extends 'base/_base.html' %}
+{% load static %}
+
+{% block title %}
+Cities of {{ request.user.get_full_name }}
+{% endblock title %}
+
+{% block content %}
+<h1>Cities of {{ request.user.get_full_name }}</h1>
+<hr>
+{% include 'base/_pagination.html' %}
+
+<form action="{% url 'weather:user_city_delete' %}" method="post" id="user_city_form">
+    {% csrf_token %}
+    <table class="table align-middle mb-0 bg-white">
+        <thead class="bg-light">
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Lat</th>
+            <th>Lon</th>
+            <th>Country</th>
+            <th>Flag</th>
+            <th>Forecast</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user_city in user_cities %}
+        <tr>
+            <td>
+                <input type="checkbox" name="selectors" class="checkbox" value="{{ user_city.id }}">
+            </td>
+            <td>
+                <div class="d-flex align-items-center">
+                    <img
+                            src="{{ user_city.city.image }}"
+                            alt=""
+                            style="width: 45px; height: 45px"
+                            class="rounded-circle"
+                    />
+                    <div class="ms-3">
+                        <a href="{% url 'weather:city_detail' city=user_city.city %}">
+                            <p class="fw-bold mb-1">{{ user_city.city }}</p>
+                        </a>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <p class="fw-normal mb-1">{{ user_city.city.lat }}</p>
+            </td>
+            <td>
+                <p class="fw-normal mb-1">{{ user_city.city.lon }}</p>
+            </td>
+            <td>
+                <a href="{% url 'weather:country_detail' country=user_city.city.country %}">
+                    <span class="fst-bold" style="font-size: 16px;">{{ user_city.city.country }}</span>
+                </a>
+            </td>
+            <td>
+                <img src="{{ user_city.city.country.flag }}"
+                     alt="{{ user_city.city.country }} flag"
+                     width="45">
+            </td>
+            <td>
+                <button type="button " class="btn btn-primary btn-sm btn-rounded">
+                    Forecast
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</form>
+
+<div class="mt-5">
+    <button type="button" class="btn btn-primary" id="select_button">Select all</button>
+    <button type="submit" class="btn btn-danger" form="user_city_form">Delete</button>
+</div>
+
+<script src="{% static 'js/select.js' %}"></script>
+{% endblock content %}

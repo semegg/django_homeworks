@@ -1,0 +1,30 @@
+{% extends 'base/_base.html' %}
+{% load static %}
+
+{% block title %}
+{{ country_info.name }}
+{% endblock title %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center">
+    <img src="{{ country_info.flag }}"  }} Flag"
+         style="max-width: 50px; max-height: 75px;">
+    <h1 class="flex-grow-1">Information about {{ country_info.name }}</h1>
+</div>
+{% autoescape off %}
+<div class="container mt-5">
+    <h3>Capital : {{ country_info.capital}}</h3>
+    <div class="row">
+        <div class="col-md-6">
+                <img src="{{ country_info.flag }}"  }} Flag"
+         style="max-width: 400px; max-height: 650px;">
+        </div>
+        <div class="col-md-6">
+            <h2>Description</h2>
+            <p class="description-text">{{ country_info.description }}</p>
+
+        </div>
+    </div>
+</div>
+{% endautoescape %}
+{% endblock content %}

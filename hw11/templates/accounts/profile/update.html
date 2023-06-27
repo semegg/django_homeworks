@@ -1,0 +1,20 @@
+{% extends 'base/_base.html' %}
+
+
+{% block title %}
+  Update profile
+{% endblock title %}
+
+
+{% block content %}
+<div class="col-md-4">
+  <h2>Update profile</h2>
+  <form action="" method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      {{ field.label_tag }} {{ field }}
+    {% endfor %}
+    <button class="btn btn-info">Update</button>
+  </form>
+</div>
+{% endblock content %}
