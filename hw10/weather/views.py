@@ -36,30 +36,30 @@ class CityWeatherView(View):
         return render(request, 'weather/today.html', {'form': form, 'weather': weather})
 
 
-class UserCityView:
-    def post(self, request):
+class UserCityAddView(View):
+    def post(self, request, city):
         user = request.user
-        city = request.POST.get('city')
+        city = city
+        print(city)
         api_key = settings.WEATHER_API_KEY
 
         weather_service = WeatherTodayService()
-        wiki = WikiService
+        wiki = WikiService()
         wiki = wiki.get_wiki_page(query=city)
-        try:
 
-            weather = weather_service.get_weather(city, api_key)
-            city = City.objects.create(name=weather.city,
-                                       slug=slugify(city),
-                                       description=wiki.description,
-                                       image=wiki.image,
-                                       lat=weather.lat,
-                                       lon=weather.lon, )
-            add_city = UserCity.objects.create(user=user, city=city)
-            if add_city:
-                messages.success(f'{city.name} has been added')
-                add_city.save()
-            else:
-                messages.error('Error')
-        except:
-            pass
+        weather = weather_service.get_weather(city, api_key)
+        city = City.objects.create(name=weather.city,
+                                   slug=slugify(city),
+                                   description=wiki.description,
+                                   image=wiki.image,
+                                   lat=weather.lat,
+                                   lon=weather.lon, )
+        add_city = UserCity.objects.create(user=user, city=city)
+        if add_city:
+            messages.success(request, f'{city.name} has been added')
+            add_city.save()
+        else:
+            messages.error(request, 'Error')
+
+            messages.error(request, 'Error')
         return render(request, 'weather/today.html')

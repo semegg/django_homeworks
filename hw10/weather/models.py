@@ -36,7 +36,7 @@ class City(models.Model):
     image = models.URLField(max_length=255)
     lat = models.FloatField(verbose_name='latitude')
     lon = models.FloatField(verbose_name='longitude')
-    country = models.ForeignKey(Country, on_delete=models.PROTECT, related_name='cities')
+
 
     objects = models.Manager()
 

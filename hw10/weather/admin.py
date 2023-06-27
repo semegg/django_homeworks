@@ -12,10 +12,10 @@ class CountryAdmin(admin.ModelAdmin):
 
 @admin.register(City)
 class CityAdmin(admin.ModelAdmin):
-    list_display = ('name', 'country', 'image', 'lat', 'lon')
+    list_display = ('name',  'image', 'lat', 'lon')
     search_fields = ('name', 'description')
     prepopulated_fields = {'slug': ('name',)}
-    list_filter = ('country',)
+
 
 
 @admin.register(UserCity)

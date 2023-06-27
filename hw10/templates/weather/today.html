@@ -56,13 +56,15 @@ Current weather
 
     </div>
 </section>
+\
+<div class="text-center">
+  <form method="post" action="{% url 'weather:user_city_add' city=weather.city%}">
     {% csrf_token %}
-<form action="{% url  'weather:user-city" method="post">
-    {% csrf_token %}
-    <div class="text-center">
-        <button type="submit" class="mt-5 btn btn-primary btn-lg">Add city</button>
-    </div>
-</form>
+    <input type="hidden" name="city_name" value="{{ weather.city }}">
+    <button type="submit" class="mt-5 btn btn-primary btn-lg">Add city</button>
+  </form>
+</div>
+
 {% else %}
 <div class="col-md-4 mb-3">
     <div class="mt-5">
